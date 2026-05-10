@@ -1,47 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rainbow Rampage</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#050005" />
+  <meta name="description" content="Rainbow Rampage is coming soon. Play hard. Burn supply. Take over." />
+  <meta property="og:title" content="Rainbow Rampage — Coming Soon" />
+  <meta property="og:description" content="Play hard. Burn supply. Take over." />
+  <meta property="og:image" content="/assets/hero-banner.webp" />
+  <title>Rainbow Rampage — Coming Soon</title>
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <div class="bg"></div>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="noise" aria-hidden="true"></div>
 
-  <header class="hero">
-    <img src="logo.png" class="logo" alt="Rainbow Rampage Logo" />
+      <nav class="nav">
+        <img class="nav-logo" src="/assets/logo.webp" alt="Rainbow Rampage" />
+        <div class="nav-actions">
+          <a href="https://x.com/_Rainbowrampage" target="_blank" rel="noopener">X</a>
+          <a href="https://t.me/Rbowrampage" target="_blank" rel="noopener">Telegram</a>
+        </div>
+      </nav>
 
-    <div class="badge">COMING SOON</div>
+      <div class="hero-inner">
+        <div class="eyebrow">COMING SOON</div>
 
-    <h1>RAINBOW<br><span>RAMPAGE</span></h1>
+        <img class="main-logo" src="/assets/logo.webp" alt="Rainbow Rampage" />
 
-    <p class="tagline">
-      Chaos. Competition. Carnage.<br>
-      The browser game where every play burns supply.
-    </p>
+        <p class="lead">
+          The chaotic browser game where players compete, tokens get burned,
+          and the leaderboard never sleeps.
+        </p>
 
-    <div class="buttons">
-      <a href="https://t.me/Rbowrampage" target="_blank" class="btn primary">Join Telegram</a>
-      <a href="https://x.com/_Rainbowrampage" target="_blank" class="btn secondary">Follow on X</a>
-    </div>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://t.me/Rbowrampage" target="_blank" rel="noopener">
+            Join Telegram
+          </a>
+          <a class="btn btn-dark" href="https://x.com/_Rainbowrampage" target="_blank" rel="noopener">
+            Follow on X
+          </a>
+        </div>
 
-    <div class="cards">
-      <div class="card">
-        <h3>PLAY</h3>
-        <p>Battle through chaotic rainbow destruction.</p>
+        <div class="strap">PLAY HARD. BURN SUPPLY. TAKE OVER.</div>
+      </div>
+    </section>
+
+    <section class="poster-section">
+      <div class="poster-wrap">
+        <img src="/assets/poster.webp" alt="Rainbow Rampage characters" />
       </div>
 
-      <div class="card">
-        <h3>BURN</h3>
-        <p>Every token used gets permanently burned.</p>
-      </div>
+      <div class="info-grid">
+        <article>
+          <span>01</span>
+          <h2>Play</h2>
+          <p>Fast, ridiculous arcade chaos built around the Rainbow Rampage world.</p>
+        </article>
 
-      <div class="card">
-        <h3>COMPETE</h3>
-        <p>Climb the leaderboard and fight for rewards.</p>
+        <article>
+          <span>02</span>
+          <h2>Burn</h2>
+          <p>Every token used to play gets burned. Less supply, more pressure.</p>
+        </article>
+
+        <article>
+          <span>03</span>
+          <h2>Compete</h2>
+          <p>Monthly leaderboard. Top players fight for airdrops and bragging rights.</p>
+        </article>
       </div>
-    </div>
-  </header>
+    </section>
+
+    <footer>
+      <img src="/assets/logo.webp" alt="Rainbow Rampage" />
+      <p>Beta details dropping soon.</p>
+    </footer>
+  </main>
 </body>
 </html>
