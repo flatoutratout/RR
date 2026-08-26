@@ -4,12 +4,43 @@ html, body {
   background: #050008;
   width: 100%;
   height: 100%;
+  height: 100dvh;
   overflow: hidden;
+  overscroll-behavior: none;
   touch-action: none;
   font-family: Arial, sans-serif;
 }
 
+body {
+  position: fixed;
+  inset: 0;
+}
+
 #game {
-  width: 100vw;
-  height: 100vh;
+  position: fixed;
+  inset: 0;
+  width: var(--rr-vw, 100vw);
+  height: var(--rr-vh, 100dvh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#game canvas {
+  display: block !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  margin: auto !important;
+}
+
+/* Keep the website return button useful without covering the HUD on a phone. */
+@media (orientation: landscape) and (pointer: coarse) {
+  .back-site {
+    top: 5px !important;
+    left: 5px !important;
+    padding: 6px 9px !important;
+    font-size: 10px !important;
+    opacity: .72;
+  }
 }
