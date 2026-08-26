@@ -1,7 +1,9 @@
-// Mobile-safe foreground replacement for Rainbow Rampage.
-// The original game creates a WORLD_W-wide TileSprite for sidewalk.png. Desktop
-// tolerates it, but some mobile WebGL renderers don't. Replace it with ONE
-// canvas-sized TileSprite and scroll the texture with the camera.
+// Robust mobile foreground replacement for Rainbow Rampage.
+// Do not use a huge world TileSprite (mobile GPU issue) and do not use a
+// canvas TileSprite (some mobile renderers still fail to show the lower wall).
+// Instead recycle three ordinary Image objects. Normal images are the most
+// reliable Phaser path across WebGL/Canvas/mobile and still give us an endless
+// scrolling sidewalk without allocating a gigantic texture surface.
 (function () {
   let patched = false;
   let attempts = 0;
@@ -22,40 +24,49 @@
       typeof cam === 'undefined' || !cam
     ) return;
 
-    // Remove every sidewalk display object created by earlier code/patches.
+    // Remove every previous sidewalk renderer, including the original
+    // WORLD_W TileSprite and any older repair layer.
     scene.children.list.slice().forEach(obj => {
       if (obj && obj.texture && obj.texture.key === 'sidewalk') obj.destroy();
     });
 
-    // Use a NORMAL 960x540 TileSprite. This is small enough for mobile GPUs,
-    // preserves the complete original sidewalk.png (including the lower wall),
-    // and sits above buildings but below the player/tanks.
-    const street = scene.add.tileSprite(480, 270, 960, 540, 'sidewalk')
-      .setOrigin(0.5)
-      .setScrollFactor(0)
-      .setDepth(4.5)
-      .setAlpha(1)
-      .setVisible(true);
+    // Three ordinary 960x540 images are enough to cover the viewport while the
+    // camera moves. The source PNG contains transparency above the street/wall.
+    const streetTiles = [-1, 0, 1].map(() =>
+      scene.add.image(0, 270, 'sidewalk')
+        .setOrigin(0.5)
+        .setScrollFactor(1)
+        .setDepth(4.5)
+        .setAlpha(1)
+        .setVisible(true)
+    );
 
-    // Make the fixed-size texture move exactly as the world camera moves.
-    const syncStreet = function () {
-      if (!street || !street.active || !cam) return;
-      street.tilePositionX = cam.scrollX;
-      street.tilePositionY = 0;
-    };
+    function syncStreet() {
+      if (!cam || !streetTiles.length) return;
+      // Snap to the current 960px world tile, then keep one image either side.
+      const tile = Math.floor(cam.scrollX / 960);
+      const baseLeft = tile * 960;
+      for (let i = 0; i < streetTiles.length; i++) {
+        const img = streetTiles[i];
+        if (!img || !img.active) continue;
+        img.x = baseLeft + (i - 1) * 960 + 480;
+        img.y = 270;
+        img.setDepth(4.5);
+        img.setVisible(true);
+        img.setAlpha(1);
+      }
+    }
+
     syncStreet();
     scene.events.on('update', syncStreet);
-    street.once('destroy', function () {
-      if (scene && scene.events) scene.events.off('update', syncStreet);
-    });
 
     patched = true;
-    window.__rrStreetLayer = street;
-    console.log('[RR] mobile-safe sidewalk active', {
-      width: street.width,
-      height: street.height,
-      depth: street.depth,
-      attempts
+    window.__rrStreetTiles = streetTiles;
+    window.__rrStreetLayer = streetTiles[1];
+    console.log('[RR] sidewalk restored with recycled normal images', {
+      renderer: game.renderer && game.renderer.type,
+      attempts,
+      count: streetTiles.length
     });
   }
 
