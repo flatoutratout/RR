@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="132" viewBox="0 0 960 132">
+<defs>
+  <filter id="cyanGlow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="pinkGlow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="orangeGlow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <linearGradient id="glass" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#11182a" stop-opacity=".98"/><stop offset=".48" stop-color="#060912" stop-opacity=".95"/><stop offset="1" stop-color="#02030a" stop-opacity=".98"/></linearGradient>
+  <linearGradient id="scan" x1="0" x2="1"><stop offset="0" stop-color="#00eaff"/><stop offset=".33" stop-color="#ffcc00"/><stop offset=".66" stop-color="#ff2ea6"/><stop offset="1" stop-color="#7dff00"/></linearGradient>
+  <linearGradient id="rageGrad" x1="0" x2="1"><stop offset="0" stop-color="#ff1f5a"/><stop offset=".3" stop-color="#ff8c00"/><stop offset=".52" stop-color="#ffe600"/><stop offset=".74" stop-color="#00ff8a"/><stop offset="1" stop-color="#00d9ff"/></linearGradient>
+  <style>
+    .label{font-family:Arial Black,Impact,sans-serif;font-size:14px;font-weight:900;letter-spacing:1.2px;paint-order:stroke;stroke:#03030a;stroke-width:4px}
+    .mini{font-family:Arial Black,Impact,sans-serif;font-size:8px;font-weight:900;letter-spacing:.5px;paint-order:stroke;stroke:#03030a;stroke-width:2px}
+    .icon{font-family:Arial Black,Impact,sans-serif;font-size:28px;font-weight:900;paint-order:stroke;stroke:#03030a;stroke-width:5px;fill:#fff}
+  </style>
+</defs>
+
+<!-- main cyber frame -->
+<path d="M10 8 H178 L196 26 H938 L950 38 V105 L940 118 H18 L8 105 V18 Z" fill="url(#glass)" stroke="#ff20e8" stroke-width="2.5" filter="url(#pinkGlow)"/>
+<path d="M18 16 H170 L188 34 H932" fill="none" stroke="url(#scan)" stroke-width="2" opacity=".75"/>
+<path d="M26 108 H930" fill="none" stroke="#00eaff" stroke-width="1.2" opacity=".35"/>
+
+<!-- logo bay -->
+<path d="M22 24 H185 L198 38 V86 L183 101 H22 Z" fill="#02040b" stroke="#00eaff" stroke-width="2.2" opacity=".92" filter="url(#cyanGlow)"/>
+<path d="M30 92 H172" stroke="#ff20e8" stroke-width="1" opacity=".25"/>
+
+<!-- stat panels -->
+<g filter="url(#cyanGlow)">
+  <path d="M214 22 H344 L361 36 L346 76 H216 L199 62 Z" fill="#050914" stroke="#00eaff" stroke-width="2.8"/>
+  <text x="282" y="40" text-anchor="middle" class="label" fill="#00eaff">SCORE</text>
+  <text x="230" y="69" text-anchor="middle" class="icon">★</text>
+  <rect x="264" y="69" width="58" height="4" fill="#00eaff"/>
+  <text x="282" y="89" text-anchor="middle" class="mini" fill="#00eaff" opacity=".55">HIGHSCORE</text>
+</g>
+
+<g filter="url(#orangeGlow)">
+  <path d="M366 22 H486 L503 36 L488 76 H368 L351 62 Z" fill="#08070a" stroke="#ffd400" stroke-width="2.8"/>
+  <text x="427" y="40" text-anchor="middle" class="label" fill="#ffd400">COINS</text>
+  <circle cx="383" cy="60" r="12" fill="#1b0f00" stroke="#ffd400" stroke-width="3"/>
+  <text x="383" y="65" text-anchor="middle" class="mini" fill="#ffd400">$</text>
+  <rect x="420" y="69" width="46" height="4" fill="#ffd400"/>
+</g>
+
+<g filter="url(#pinkGlow)">
+  <path d="M508 22 H628 L645 36 L630 76 H510 L493 62 Z" fill="#0a050c" stroke="#ff3f9d" stroke-width="2.8"/>
+  <text x="568" y="40" text-anchor="middle" class="label" fill="#ff3f9d">LIVES</text>
+  <text x="526" y="68" text-anchor="middle" class="icon" fill="#ff4da6">♥</text>
+  <rect x="558" y="69" width="54" height="4" fill="#ff3f9d"/>
+</g>
+
+<g filter="url(#cyanGlow)">
+  <path d="M650 22 H784 L801 36 L786 76 H652 L635 62 Z" fill="#050a05" stroke="#7dff00" stroke-width="2.8"/>
+  <text x="720" y="40" text-anchor="middle" class="label" fill="#7dff00">DISTANCE</text>
+  <text x="668" y="68" text-anchor="middle" class="icon" fill="#7dff00">▶</text>
+  <rect x="714" y="69" width="42" height="4" fill="#7dff00"/>
+</g>
+
+<g filter="url(#orangeGlow)">
+  <path d="M806 22 H914 L932 36 L917 76 H808 L791 62 Z" fill="#0d0602" stroke="#ff8500" stroke-width="2.8"/>
+  <text x="862" y="40" text-anchor="middle" class="label" fill="#ff8500">HEAT</text>
+  <text x="823" y="67" text-anchor="middle" class="icon">🔥</text>
+  <rect x="856" y="69" width="44" height="4" fill="#ff8500"/>
+</g>
+
+<!-- segmented rage strip -->
+<path d="M204 91 H835 L856 103 L846 124 H190 L179 110 Z" fill="#090414" stroke="#ff20e8" stroke-width="2.4" filter="url(#pinkGlow)"/>
+<text x="236" y="115" text-anchor="middle" class="label" fill="#ff4da6">⚡ RAGE</text>
+<rect x="300" y="101" width="468" height="12" rx="5" fill="#1b0b25" stroke="#4d3158" stroke-width="1"/>
+<g opacity=".28">
+  <rect x="305" y="103" width="34" height="8" fill="#2b1730"/>
+  <rect x="344" y="103" width="34" height="8" fill="#2b1730"/>
+  <rect x="383" y="103" width="34" height="8" fill="#2b1730"/>
+  <rect x="422" y="103" width="34" height="8" fill="#2b1730"/>
+  <rect x="461" y="103" width="34" height="8" fill="#2b1730"/>
+  <rect x="500" y="103" width="34" height="8" fill="#2b1730"/>
+  <rect x="539" y="103" width="34" height="8" fill="#2b1730"/>
+  <rect x="578" y="103" width="34" height="8" fill="#2b1730"/>
+  <rect x="617" y="103" width="34" height="8" fill="#2b1730"/>
+  <rect x="656" y="103" width="34" height="8" fill="#2b1730"/>
+  <rect x="695" y="103" width="34" height="8" fill="#2b1730"/>
+  <rect x="734" y="103" width="29" height="8" fill="#2b1730"/>
+</g>
+<text x="815" y="116" text-anchor="middle" class="label" fill="#00ffff">%</text>
+</svg>

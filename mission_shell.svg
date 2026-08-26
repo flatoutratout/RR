@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="96" viewBox="0 0 300 96">
+<defs>
+  <filter id="greenGlow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <linearGradient id="panel" x1="0" x2="1"><stop offset="0" stop-color="#031006"/><stop offset=".6" stop-color="#03050a"/><stop offset="1" stop-color="#071506"/></linearGradient>
+</defs>
+<path d="M8 18 L28 6 H292 V78 L275 92 H8 Z" fill="url(#panel)" stroke="#7dff00" stroke-width="4" filter="url(#greenGlow)"/>
+<path d="M18 26 L34 16 H282 V70 L268 82 H18 Z" fill="none" stroke="#00ff90" stroke-opacity=".45" stroke-width="2"/>
+<circle cx="50" cy="49" r="23" fill="#061606" stroke="#7dff00" stroke-opacity=".55" stroke-width="2"/>
+<path d="M50 30 V68 M31 49 H69 M38 37 Q50 28 62 37 M38 61 Q50 70 62 61" fill="none" stroke="#7dff00" stroke-width="3" stroke-linecap="round"/>
+<rect x="98" y="66" width="138" height="10" rx="3" fill="#09160a" stroke="#7dff00" stroke-width="1.5"/>
+<rect x="99" y="67" width="72" height="8" rx="3" fill="#7dff00"/>
+</svg>
