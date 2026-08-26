@@ -1,25 +1,86 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Rainbow Rampage Arcade</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <link rel="stylesheet" href="style.css" />
-<style>
-      .back-site{
-        position:fixed;top:10px;left:10px;z-index:9999;
-        padding:8px 12px;border:1px solid rgba(255,255,255,.45);
-        border-radius:999px;background:rgba(0,0,0,.65);
-        color:#fff;text-decoration:none;font:700 12px Arial,sans-serif;
-        backdrop-filter:blur(6px)
-      }
-      .back-site:hover{background:rgba(255,0,212,.75)}
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#050005" />
+  <meta name="description" content="Rainbow Rampage browser beta is live. Play the chaos now." />
+  <meta property="og:title" content="Rainbow Rampage — Beta Live" />
+  <meta property="og:description" content="The Rainbow Rampage browser beta is live now." />
+  <meta property="og:image" content="/assets/hero-banner.webp" />
+  <title>Rainbow Rampage — Beta Live</title>
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <a class="back-site" href="/">← Rainbow Rampage</a>
-  <div id="game"></div>
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
-  <script src="main.js"></script>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="noise" aria-hidden="true"></div>
+
+      <nav class="nav">
+        <img class="nav-logo" src="/assets/logo.webp" alt="Rainbow Rampage" />
+        <div class="nav-actions">
+          <a href="https://x.com/_Rainbowrampage" target="_blank" rel="noopener">X</a>
+          <a href="https://t.me/Rbowrampage" target="_blank" rel="noopener">Telegram</a>
+        </div>
+      </nav>
+
+      <div class="hero-inner">
+        <div class="eyebrow">BETA NOW LIVE</div>
+
+        <img class="main-logo" src="/assets/logo.webp" alt="Rainbow Rampage" />
+
+        <p class="lead">
+          The Rainbow Rampage browser beta is live. Pick your rampager,
+          smash the city and see how far you can get.
+        </p>
+
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/play/">
+            PLAY BETA
+          </a>
+          <a class="btn btn-dark" href="https://t.me/Rbowrampage" target="_blank" rel="noopener">
+            Join Telegram
+          </a>
+          <a class="btn btn-dark" href="https://x.com/_Rainbowrampage" target="_blank" rel="noopener">
+            Follow on X
+          </a>
+        </div>
+
+        <div class="strap">PLAY HARD. BURN SUPPLY. TAKE OVER.</div>
+      </div>
+    </section>
+
+    <section class="poster-section">
+      <div class="poster-wrap">
+        <img src="/assets/poster.webp" alt="Rainbow Rampage characters" />
+      </div>
+
+      <div class="info-grid">
+        <article>
+          <span>01</span>
+          <h2>Play</h2>
+          <p>Fast, ridiculous arcade chaos built around the Rainbow Rampage world.</p>
+        </article>
+
+        <article>
+          <span>02</span>
+          <h2>Burn</h2>
+          <p>Every token used to play gets burned. Less supply, more pressure.</p>
+        </article>
+
+        <article>
+          <span>03</span>
+          <h2>Compete</h2>
+          <p>Monthly leaderboard. Top players fight for airdrops and bragging rights.</p>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      <img src="/assets/logo.webp" alt="Rainbow Rampage" />
+      <p>Browser beta live now.</p>
+    </footer>
+  </main>
 </body>
 </html>

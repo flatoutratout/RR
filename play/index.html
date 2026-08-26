@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rainbow Rampage Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="style.css" />
+<style>
+      .back-site{
+        position:fixed;top:10px;left:10px;z-index:9999;
+        padding:8px 12px;border:1px solid rgba(255,255,255,.45);
+        border-radius:999px;background:rgba(0,0,0,.65);
+        color:#fff;text-decoration:none;font:700 12px Arial,sans-serif;
+        backdrop-filter:blur(6px)
+      }
+      .back-site:hover{background:rgba(255,0,212,.75)}
+    </style>
+</head>
+<body>
+  <a class="back-site" href="/">← Rainbow Rampage</a>
+  <div id="game"></div>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
