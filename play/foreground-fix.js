@@ -1,8 +1,7 @@
-// Mobile foreground repair.
-// IMPORTANT: wait until the Phaser scene has COMPLETELY finished create().
-// Earlier versions fired as soon as the sidewalk texture existed during preload,
-// which meant the replacement could be created too early and never become the
-// final visible world layer.
+// Mobile-safe foreground replacement for Rainbow Rampage.
+// The original game creates a WORLD_W-wide TileSprite for sidewalk.png. Desktop
+// tolerates it, but some mobile WebGL renderers don't. Replace it with ONE
+// canvas-sized TileSprite and scroll the texture with the camera.
 (function () {
   let patched = false;
   let attempts = 0;
@@ -14,8 +13,6 @@
     const scene = game && game.scene && game.scene.scenes && game.scene.scenes[0];
     attempts++;
 
-    // Do NOT patch during preload. These globals/groups are only populated once
-    // main.js create() has completed far enough for the playable world to exist.
     if (
       !scene || !scene.sys || !scene.sys.isActive() ||
       !scene.textures || !scene.textures.exists('sidewalk') ||
@@ -25,46 +22,48 @@
       typeof cam === 'undefined' || !cam
     ) return;
 
-    // Remove only the original gigantic world-wide sidewalk TileSprite.
-    // Keep every other gameplay object exactly where main.js created it.
+    // Remove every sidewalk display object created by earlier code/patches.
     scene.children.list.slice().forEach(obj => {
       if (obj && obj.texture && obj.texture.key === 'sidewalk') obj.destroy();
     });
 
-    // sidewalk.png is itself a complete 960x540 transparent overlay. Its visible
-    // cyberpunk wall/platform occupies the bottom of the image, so render the
-    // WHOLE native asset at the same coordinates as the game canvas. No crop,
-    // no rescaling, and no repositioning of player/buildings/tanks.
-    const street = scene.add.image(480, 270, 'sidewalk')
+    // Use a NORMAL 960x540 TileSprite. This is small enough for mobile GPUs,
+    // preserves the complete original sidewalk.png (including the lower wall),
+    // and sits above buildings but below the player/tanks.
+    const street = scene.add.tileSprite(480, 270, 960, 540, 'sidewalk')
       .setOrigin(0.5)
       .setScrollFactor(0)
-      .setDepth(3.5)
+      .setDepth(4.5)
       .setAlpha(1)
       .setVisible(true);
 
-    // Sanity-check the layer really has native dimensions before declaring done.
-    if (!street || street.width !== 960 || street.height !== 540) {
-      if (street) street.destroy();
-      return;
-    }
+    // Make the fixed-size texture move exactly as the world camera moves.
+    const syncStreet = function () {
+      if (!street || !street.active || !cam) return;
+      street.tilePositionX = cam.scrollX;
+      street.tilePositionY = 0;
+    };
+    syncStreet();
+    scene.events.on('update', syncStreet);
+    street.once('destroy', function () {
+      if (scene && scene.events) scene.events.off('update', syncStreet);
+    });
 
     patched = true;
     window.__rrStreetLayer = street;
-    console.log('[RR] mobile foreground restored after scene create', {
-      attempts,
+    console.log('[RR] mobile-safe sidewalk active', {
       width: street.width,
       height: street.height,
-      depth: street.depth
+      depth: street.depth,
+      attempts
     });
   }
 
-  // Wait beyond preload/create instead of racing them.
   const timer = setInterval(function () {
     patchForeground();
-    if (patched || attempts > 200) clearInterval(timer);
+    if (patched || attempts > 240) clearInterval(timer);
   }, 50);
 
-  // Also retry after load/orientation settles on mobile browsers.
   window.addEventListener('load', function () {
     setTimeout(patchForeground, 350);
   }, { once: true });
