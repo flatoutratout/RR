@@ -36,5 +36,13 @@
 .about-finale{margin-top:26px;padding:34px;border-radius:24px;text-align:center;border:2px solid rgba(255,255,255,.16);background:radial-gradient(circle at 50% 0%,rgba(255,0,212,.17),transparent 42%),rgba(0,0,0,.62);color:#fff!important}
 .about-finale h3{margin:0 0 16px;font:1000 clamp(38px,6vw,68px)/.9 Impact,"Arial Black",sans-serif;text-transform:uppercase;color:#fff!important}.about-finale p{max-width:850px;margin:0 auto 16px;font:800 18px/1.65 Arial,Helvetica,sans-serif;color:#fff!important}
 .about-finale .closer{margin-top:22px;font:1000 clamp(23px,4vw,38px)/1.05 "Arial Black",Arial,sans-serif;color:#fff200!important;text-transform:uppercase;text-shadow:3px 3px 0 #000}
+
+/* About content is always visible. These elements were manually given fun-reveal
+   classes but weren't part of the observer target list, leaving them stuck at opacity:0. */
+.about-project .fun-reveal{
+  opacity:1!important;
+  transform:none!important;
+}
+
 @media(max-width:820px){.about-project{padding:70px 16px 78px}.about-grid{grid-template-columns:1fr}.about-card.wide{grid-column:auto}.about-card{padding:24px}.about-card ul{grid-template-columns:1fr}.stage-list{grid-template-columns:1fr 1fr}.about-intro p{font-size:17px}.about-project::before{top:34px;right:-30vw}}
 @media(max-width:520px){.stage-list{grid-template-columns:1fr}.about-title{font-size:clamp(45px,14vw,72px)}.about-card h3{font-size:36px}.about-finale{padding:26px 20px}}
