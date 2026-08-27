@@ -2,35 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Rainbow Rampage Arcade</title>
+  <title>Rainbow Rampage V2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <base href="/play/" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="v2-shell.css" />
   <style>
-    .back-site{
-      position:fixed;top:10px;left:10px;z-index:9999;
-      padding:8px 12px;border:1px solid rgba(255,255,255,.45);
-      border-radius:999px;background:rgba(0,0,0,.65);
-      color:#fff;text-decoration:none;font:700 12px Arial,sans-serif;
-      backdrop-filter:blur(6px)
-    }
+    .back-site{position:fixed;top:10px;left:10px;z-index:9999;padding:8px 12px;border:1px solid rgba(255,255,255,.45);border-radius:999px;background:rgba(0,0,0,.65);color:#fff;text-decoration:none;font:700 12px Arial,sans-serif;backdrop-filter:blur(6px)}
     .back-site:hover{background:rgba(255,0,212,.75)}
-    .rotate-phone{
-      display:none;position:fixed;inset:0;z-index:9998;background:#050008;color:#fff;
-      align-items:center;justify-content:center;text-align:center;padding:32px;
-      font:900 22px/1.35 Arial Black,Arial,sans-serif;
-    }
+    .rotate-phone{display:none;position:fixed;inset:0;z-index:9998;background:#050008;color:#fff;align-items:center;justify-content:center;text-align:center;padding:32px;font:900 22px/1.35 Arial Black,Arial,sans-serif}
     .rotate-phone span{display:block;font-size:54px;margin-bottom:14px}
-    @media (orientation: portrait) and (pointer: coarse){
-      #game{visibility:hidden}
-      .rotate-phone{display:flex}
-    }
+    @media (orientation:portrait) and (pointer:coarse){#game{visibility:hidden}.rotate-phone{display:flex}}
   </style>
 </head>
 <body>
   <a class="back-site" href="/">← Rainbow Rampage</a>
   <div class="rotate-phone"><div><span>↻</span>ROTATE YOUR PHONE<br>TO PLAY</div></div>
   <div id="game"></div>
+  <div class="v2-beta-stamp">V2 // CHAOS BUILD</div>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
   <script src="mobile-renderer.js?v=1"></script>
   <script src="main.js"></script>
