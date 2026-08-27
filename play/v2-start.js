@@ -1,6 +1,31 @@
 // Rainbow Rampage V2 character select.
 // Uses the existing portraits/stats and only replaces presentation.
 (function () {
+  // Fullscreen must be requested synchronously from the user's tap. On supporting mobile
+  // browsers we then ask for landscape orientation. Both operations are best-effort so
+  // unsupported browsers still start the game normally.
+  function requestGameFullscreen() {
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints || 0) > 0;
+    if (!isTouch) return;
+
+    const target = document.documentElement;
+    const request = target.requestFullscreen || target.webkitRequestFullscreen;
+    if (!request || document.fullscreenElement || document.webkitFullscreenElement) return;
+
+    try {
+      const result = request.call(target, { navigationUI: 'hide' });
+      if (result && typeof result.then === 'function') {
+        result.then(() => {
+          if (screen.orientation && typeof screen.orientation.lock === 'function') {
+            screen.orientation.lock('landscape').catch(() => {});
+          }
+        }).catch(() => {});
+      }
+    } catch (_) {
+      // Fullscreen support varies by mobile browser; never block gameplay if rejected.
+    }
+  }
+
   showStart = function showStartV2(scene) {
     startPanel = scene.add.container(480, 286).setScrollFactor(0).setDepth(100);
 
@@ -42,20 +67,19 @@
       }
     };
 
-    // Selection must fire exactly once. Previously every overlapping child was interactive,
-    // so one tap could dispatch several pointerdown handlers while the panel was destroying.
     let choosing = false;
     const chooseCharacter = (key, cardBg, portrait) => {
       if (choosing || isStarted) return;
       choosing = true;
 
-      // Stop the start screen receiving any further pointer events immediately.
+      // This is deliberately called directly inside pointerdown so the browser sees a
+      // genuine user activation. Waiting for delayedCall would cause fullscreen rejection.
+      requestGameFullscreen();
+
       startPanel.list.forEach(obj => {
         if (obj && obj.input && obj.disableInteractive) obj.disableInteractive();
       });
 
-      // Tiny confirmation punch, then enter the real game on the next tick. This keeps
-      // Phaser's input dispatch separate from destruction of the container that was tapped.
       if (cardBg) cardBg.setFillStyle(0xffffff, 0.18);
       if (portrait) portrait.setScale(0.60);
       scene.time.delayedCall(1, () => startGame(key));
@@ -91,7 +115,6 @@
       }).setOrigin(0.5);
       startPanel.add(tap);
 
-      // One hit target per card; visual children deliberately stay non-interactive.
       cardBg.setInteractive({ useHandCursor:true });
       cardBg.on('pointerdown', () => chooseCharacter(ch.key, cardBg, portrait));
       cardBg.on('pointerover', () => {
