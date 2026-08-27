@@ -22,12 +22,12 @@
   <div id="game"></div>
   <div class="v2-beta-stamp">V2 // CHAOS BUILD</div>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
-  <script src="mobile-renderer.js?v=5"></script>
-  <script src="main.js?v=5"></script>
+  <script src="mobile-renderer.js?v=6"></script>
+  <!-- Exact fix currently used by live main: intercept giant sidewalk TileSprite BEFORE main.js creates it. -->
+  <script src="mobile-sidewalk-direct.js?v=1"></script>
+  <script src="main.js?v=6"></script>
   <script src="mobile-fix.js?v=4"></script>
   <script src="restart-fix.js?v=3"></script>
-  <!-- This is the actual mobile street repair. It was sitting in the repo but was not loaded by V2. -->
-  <script src="foreground-fix.js?v=2"></script>
   <script src="v2-hud.js?v=2"></script>
   <script src="v2-start.js?v=3"></script>
   <script src="v2-leaderboard.js?v=2"></script>
