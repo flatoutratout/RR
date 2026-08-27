@@ -1,0 +1,157 @@
+/* Rainbow Rampage fun-stuff mock-up — preview branch only */
+
+:root{
+  --rr-pink:#ff20c8;
+  --rr-cyan:#18f7ff;
+  --rr-yellow:#fff200;
+  --rr-green:#66ff3a;
+}
+
+body.fun-ready .main-logo{
+  transform-origin:center;
+  animation:logoSplatIn .72s cubic-bezier(.18,.9,.28,1.28) both;
+}
+
+@keyframes logoSplatIn{
+  0%{opacity:0;transform:scale(.72) rotate(-5deg);filter:blur(12px) saturate(1.6)}
+  58%{opacity:1;transform:scale(1.05) rotate(1.6deg);filter:blur(0) saturate(1.18)}
+  78%{transform:scale(.985) rotate(-.6deg)}
+  100%{transform:scale(1) rotate(0)}
+}
+
+.hero-bg{
+  will-change:transform;
+  transition:transform .12s linear;
+}
+
+.hero-fun-layer{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.graffiti-word{
+  position:absolute;
+  font:1000 clamp(28px,5vw,70px)/.85 Impact,"Arial Black",sans-serif;
+  letter-spacing:2px;
+  color:transparent;
+  -webkit-text-stroke:2px rgba(255,255,255,.12);
+  text-transform:uppercase;
+  opacity:.34;
+  filter:drop-shadow(0 0 12px rgba(255,0,200,.16));
+  user-select:none;
+}
+.graffiti-word.g1{left:3%;top:34%;transform:rotate(-12deg)}
+.graffiti-word.g2{right:3%;top:48%;transform:rotate(10deg)}
+.graffiti-word.g3{left:9%;bottom:8%;transform:rotate(5deg);font-size:clamp(24px,4vw,56px)}
+
+.paint-splat{
+  position:absolute;
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  opacity:.28;
+  filter:blur(.2px) drop-shadow(0 0 20px currentColor);
+  background:
+    radial-gradient(circle at 50% 50%,currentColor 0 31%,transparent 33%),
+    radial-gradient(circle at 14% 40%,currentColor 0 7%,transparent 8%),
+    radial-gradient(circle at 82% 16%,currentColor 0 8%,transparent 9%),
+    radial-gradient(circle at 88% 70%,currentColor 0 5%,transparent 6%),
+    radial-gradient(circle at 24% 82%,currentColor 0 6%,transparent 7%);
+}
+.paint-splat.s1{left:-22px;top:20%;color:var(--rr-pink);transform:rotate(18deg) scale(.8)}
+.paint-splat.s2{right:-25px;top:31%;color:var(--rr-cyan);transform:rotate(-18deg) scale(.95)}
+.paint-splat.s3{left:18%;bottom:1%;color:var(--rr-yellow);transform:scale(.55)}
+
+.mega-play{
+  isolation:isolate;
+}
+
+.mega-play::after{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  z-index:-1;
+  border-radius:inherit;
+  background:linear-gradient(90deg,var(--rr-pink),var(--rr-yellow),var(--rr-cyan),var(--rr-pink));
+  background-size:240% 100%;
+  opacity:0;
+  filter:blur(16px);
+  transition:opacity .18s ease;
+}
+
+.mega-play:hover::after{opacity:.8;animation:rgbRush .7s linear infinite}
+.mega-play:hover .play-icon{animation:playKick .42s ease both}
+.mega-play.is-hit{animation:buttonHit .28s ease both}
+
+@keyframes rgbRush{to{background-position:240% 0}}
+@keyframes playKick{0%{transform:scale(1)}45%{transform:scale(1.15) rotate(-8deg)}100%{transform:scale(1)}}
+@keyframes buttonHit{0%{transform:translate(0,0) scale(1)}28%{transform:translate(-4px,2px) scale(.992)}54%{transform:translate(4px,-2px) scale(1.01)}100%{transform:translate(0,0) scale(1)}}
+
+.fun-reveal{
+  opacity:0;
+  transform:translateY(26px) scale(.985);
+  transition:opacity .58s ease,transform .68s cubic-bezier(.2,.8,.2,1);
+}
+.fun-reveal.is-visible{opacity:1;transform:none}
+
+.poster-wrap.fun-reveal.is-visible{
+  animation:posterSettle .7s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes posterSettle{
+  0%{transform:translateY(20px) rotate(-1.2deg) scale(.985)}
+  70%{transform:translateY(0) rotate(.35deg) scale(1.005)}
+  100%{transform:none}
+}
+
+.info-grid article{
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.info-grid article:hover{
+  transform:translateY(-7px) rotate(-.5deg);
+  border-color:rgba(255,255,255,.34);
+  box-shadow:0 20px 46px rgba(0,0,0,.48),0 0 24px rgba(255,0,212,.12);
+}
+.info-grid article:nth-child(2):hover{transform:translateY(-7px) rotate(.5deg)}
+.info-grid article:nth-child(3):hover{transform:translateY(-7px) rotate(-.25deg)}
+
+.lb-row:nth-child(1){position:relative;background:linear-gradient(90deg,rgba(255,218,0,.2),rgba(255,0,189,.08));box-shadow:inset 4px 0 0 #ffd900}
+.lb-row:nth-child(2){background:linear-gradient(90deg,rgba(213,226,238,.11),transparent)}
+.lb-row:nth-child(3){background:linear-gradient(90deg,rgba(205,127,50,.12),transparent)}
+.lb-row:nth-child(1) .lb-rank{font-size:0}
+.lb-row:nth-child(1) .lb-rank::before{content:"👑";font-size:22px}
+
+.rr-click-splat{
+  position:fixed;
+  z-index:9999;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  pointer-events:none;
+  background:var(--rr-yellow);
+  box-shadow:
+    18px -9px 0 -3px var(--rr-pink),
+    -16px -6px 0 -4px var(--rr-cyan),
+    11px 18px 0 -4px var(--rr-green),
+    -13px 15px 0 -4px #ff6536;
+  animation:clickSplat .42s ease-out forwards;
+}
+@keyframes clickSplat{from{opacity:1;transform:translate(-50%,-50%) scale(.2)}to{opacity:0;transform:translate(-50%,-50%) scale(3.2)}}
+
+@media (max-width:780px){
+  .graffiti-word{opacity:.19;-webkit-text-stroke-width:1px}
+  .graffiti-word.g1{top:28%;left:-3%}
+  .graffiti-word.g2{top:56%;right:-4%}
+  .graffiti-word.g3{display:none}
+  .paint-splat{opacity:.17;width:78px;height:78px}
+  .hero-bg{transition:none}
+  .info-grid article:hover{transform:none}
+}
+
+@media (prefers-reduced-motion:reduce){
+  body.fun-ready .main-logo,.mega-play:hover .play-icon,.mega-play.is-hit,.poster-wrap.fun-reveal.is-visible{animation:none}
+  .fun-reveal{opacity:1;transform:none;transition:none}
+  .hero-bg{transform:scale(1.02)!important}
+}
