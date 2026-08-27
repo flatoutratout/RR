@@ -27,4 +27,17 @@
 .lb-row{display:grid;grid-template-columns:46px 1fr auto;align-items:center;gap:12px;min-height:62px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.025)}
 .lb-row:last-child{border-bottom:0}.lb-row.is-king{background:linear-gradient(90deg,rgba(255,221,0,.17),rgba(255,0,189,.06));box-shadow:inset 4px 0 0 #ffd900}
 .lb-rank{font:1000 20px/1 "Arial Black",sans-serif;text-align:center}.lb-player{min-width:0}.lb-player strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:1000 16px/1.05 "Arial Black",sans-serif}.lb-player small{display:block;margin-top:5px;color:#ad9fba;font:800 10px/1 Arial,sans-serif;letter-spacing:.6px}.lb-score{font:1000 18px/1 "Arial Black",sans-serif;color:#fff200;text-shadow:2px 2px 0 #000}.lb-empty{padding:42px 20px;text-align:center;font:1000 18px/1.4 "Arial Black",sans-serif;color:#fff}.lb-empty small{color:#9e91a7;font-size:11px}
-@media(max-width:780px){.lb-wrap{grid-template-columns:1fr}.lb-copy{text-align:center}.lb-copy .section-kicker{text-align:center}.lb-copy p{margin-left:auto;margin-right:auto}.lb-title{font-size:clamp(50px,15vw,82px)}.lb-board{transform:none}.leaderboard-section{padding-top:55px}}
+
+/* Homepage asset cleanup: logo.webp still contains baked black pixels, so screen them out
+   against the dark hero rather than presenting them as rectangular cards. */
+.nav-logo,.main-logo,footer img{
+  background:transparent!important;
+  mix-blend-mode:screen;
+}
+
+@media(max-width:780px){
+  .lb-wrap{grid-template-columns:1fr}.lb-copy{text-align:center}.lb-copy .section-kicker{text-align:center}.lb-copy p{margin-left:auto;margin-right:auto}.lb-title{font-size:clamp(50px,15vw,82px)}.lb-board{transform:none}.leaderboard-section{padding-top:55px}
+  /* The rotating conic pseudo-element is the stray outlined/floating circle visible on mobile. */
+  .hero::after{display:none!important;content:none!important;animation:none!important}
+  .nav-logo,.main-logo{mix-blend-mode:screen;filter:drop-shadow(0 0 10px rgba(255,255,255,.35)) drop-shadow(0 0 22px rgba(255,0,212,.4))}
+}
