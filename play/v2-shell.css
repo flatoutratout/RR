@@ -1,0 +1,10 @@
+/* Rainbow Rampage V2 presentation shell — deliberately CSS-only first pass. */
+:root{--rr-pink:#ff168f;--rr-lime:#b8ff19;--rr-cyan:#20e6ff;--rr-yellow:#ffd62e;--rr-ink:#050008}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9000;background:radial-gradient(circle at 50% 45%,transparent 42%,rgba(0,0,0,.34) 100%);mix-blend-mode:multiply}
+#game{background:linear-gradient(135deg,#050008,#10031b 55%,#050008)}
+#game canvas{filter:saturate(1.08) contrast(1.035);box-shadow:0 0 0 2px rgba(255,255,255,.06),0 0 44px rgba(255,22,143,.13)}
+.back-site{border:2px solid rgba(255,255,255,.75)!important;background:rgba(4,0,8,.82)!important;box-shadow:3px 3px 0 rgba(255,22,143,.8),0 0 18px rgba(32,230,255,.15);font-family:Impact,'Arial Black',sans-serif!important;letter-spacing:.04em;text-transform:uppercase}
+.rotate-phone{background:radial-gradient(circle at center,#1b0630,#050008 68%)!important;font-family:Impact,'Arial Black',sans-serif!important;letter-spacing:.04em;text-transform:uppercase}
+.rotate-phone span{color:var(--rr-lime);text-shadow:3px 3px 0 var(--rr-pink),0 0 22px rgba(184,255,25,.5)}
+.v2-beta-stamp{position:fixed;right:12px;bottom:10px;z-index:8999;pointer-events:none;transform:rotate(-3deg);padding:5px 10px;border:2px solid var(--rr-lime);background:rgba(5,0,8,.72);color:#fff;font:900 10px/1 Impact,'Arial Black',sans-serif;letter-spacing:.12em;box-shadow:3px 3px 0 var(--rr-pink);opacity:.75}
+@media (orientation:landscape) and (pointer:coarse){.v2-beta-stamp{right:6px;bottom:5px;font-size:8px;padding:4px 7px}.back-site{box-shadow:2px 2px 0 rgba(255,22,143,.8)!important}}
