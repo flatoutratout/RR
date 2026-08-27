@@ -10,7 +10,6 @@
     inner.setStrokeStyle(3, 0xff00c8, 0.82);
     startPanel.add([backdrop, inner]);
 
-    // Loud comic splashes behind the title.
     const slash1 = scene.add.rectangle(-235, -177, 300, 14, 0xdfff00, 0.95).setAngle(-3);
     const slash2 = scene.add.rectangle(225, -170, 245, 10, 0xff006e, 0.9).setAngle(4);
     const logo = scene.add.image(0, -178, 'logoWide').setScale(0.62);
@@ -43,6 +42,25 @@
       }
     };
 
+    // Selection must fire exactly once. Previously every overlapping child was interactive,
+    // so one tap could dispatch several pointerdown handlers while the panel was destroying.
+    let choosing = false;
+    const chooseCharacter = (key, cardBg, portrait) => {
+      if (choosing || isStarted) return;
+      choosing = true;
+
+      // Stop the start screen receiving any further pointer events immediately.
+      startPanel.list.forEach(obj => {
+        if (obj && obj.input && obj.disableInteractive) obj.disableInteractive();
+      });
+
+      // Tiny confirmation punch, then enter the real game on the next tick. This keeps
+      // Phaser's input dispatch separate from destruction of the container that was tapped.
+      if (cardBg) cardBg.setFillStyle(0xffffff, 0.18);
+      if (portrait) portrait.setScale(0.60);
+      scene.time.delayedCall(1, () => startGame(key));
+    };
+
     chars.forEach((ch, i) => {
       const x = -315 + i * 210;
       const cardBg = scene.add.rectangle(x, 30, 184, 235, 0x07070a, 0.98);
@@ -73,17 +91,17 @@
       }).setOrigin(0.5);
       startPanel.add(tap);
 
-      [cardBg, innerCard, portraitBack, portrait, namePlate, name, role, tap].forEach(obj => {
-        obj.setInteractive({ useHandCursor:true });
-        obj.on('pointerdown', () => startGame(ch.key));
-      });
-
+      // One hit target per card; visual children deliberately stay non-interactive.
+      cardBg.setInteractive({ useHandCursor:true });
+      cardBg.on('pointerdown', () => chooseCharacter(ch.key, cardBg, portrait));
       cardBg.on('pointerover', () => {
+        if (choosing) return;
         cardBg.setScale(1.045);
         portrait.setScale(0.57);
         cardBg.setFillStyle(ch.color, 0.15);
       });
       cardBg.on('pointerout', () => {
+        if (choosing) return;
         cardBg.setScale(1);
         portrait.setScale(0.54);
         cardBg.setFillStyle(0x07070a, 0.98);
@@ -105,7 +123,7 @@
     const rainbow = ['#ff2b45','#ff9d00','#fff200','#58ff37','#00eaff','#8a55ff','#ff20cc'];
     scene.tweens.addCounter({
       from:0,to:rainbow.length-1,duration:1600,repeat:-1,
-      onUpdate:t => footer.setColor(rainbow[Math.floor(t.getValue()) % rainbow.length])
+      onUpdate:t => { if (footer.active) footer.setColor(rainbow[Math.floor(t.getValue()) % rainbow.length]); }
     });
     startPanel.add(footer);
 
