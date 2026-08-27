@@ -1,0 +1,30 @@
+/* Rainbow Rampage V2 homepage layer */
+.leaderboard-section{
+  position:relative;
+  padding:70px 20px 90px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(255,0,212,.17),transparent 28%),
+    radial-gradient(circle at 85% 80%,rgba(0,234,255,.12),transparent 30%),
+    #050008;
+  border-top:8px solid #fff;
+  border-bottom:8px solid #fff;
+}
+.leaderboard-section::before,.leaderboard-section::after{
+  content:"";position:absolute;left:-4%;right:-4%;height:18px;background:#050008;transform:rotate(-.7deg);z-index:1
+}
+.leaderboard-section::before{top:-10px}.leaderboard-section::after{bottom:-10px;transform:rotate(.6deg)}
+.lb-wrap{position:relative;z-index:2;width:min(1040px,100%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:34px;align-items:center}
+.lb-copy .section-kicker{text-align:left;margin-bottom:14px;color:#ff2ad4}
+.lb-title{margin:0;font:1000 clamp(52px,8vw,104px)/.82 Impact,"Arial Black",sans-serif;text-transform:uppercase;letter-spacing:-2px;text-shadow:6px 6px 0 #000,9px 9px 0 #ff006e}
+.lb-title span{display:block;color:#dfff00;transform:rotate(-2deg);transform-origin:left center;text-shadow:6px 6px 0 #000,0 0 25px rgba(223,255,0,.4)}
+.lb-copy p{max-width:520px;font:700 17px/1.55 Arial,sans-serif;color:rgba(255,255,255,.75)}
+.lb-copy .mini-cta{display:inline-block;margin-top:10px;padding:15px 20px;background:#fff200;color:#050005;border:3px solid #fff;box-shadow:7px 7px 0 #000;text-decoration:none;font:1000 18px/1 "Arial Black",sans-serif;transform:rotate(-1deg)}
+.lb-board{background:#08070b;border:4px solid #fff;border-radius:18px;box-shadow:13px 13px 0 #000,0 0 0 4px #ff00bd,0 0 36px rgba(255,0,189,.28);overflow:hidden;transform:rotate(.7deg)}
+.lb-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;background:linear-gradient(90deg,#16121d,#08070b);border-bottom:3px solid #fff;font:1000 13px/1 "Arial Black",sans-serif;letter-spacing:1.5px}
+.lb-head strong{font-size:21px;color:#fff}.lb-status{color:#80ff4b}
+.lb-list{padding:9px}
+.lb-row{display:grid;grid-template-columns:46px 1fr auto;align-items:center;gap:12px;min-height:62px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.025)}
+.lb-row:last-child{border-bottom:0}.lb-row.is-king{background:linear-gradient(90deg,rgba(255,221,0,.17),rgba(255,0,189,.06));box-shadow:inset 4px 0 0 #ffd900}
+.lb-rank{font:1000 20px/1 "Arial Black",sans-serif;text-align:center}.lb-player{min-width:0}.lb-player strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:1000 16px/1.05 "Arial Black",sans-serif}.lb-player small{display:block;margin-top:5px;color:#ad9fba;font:800 10px/1 Arial,sans-serif;letter-spacing:.6px}.lb-score{font:1000 18px/1 "Arial Black",sans-serif;color:#fff200;text-shadow:2px 2px 0 #000}.lb-empty{padding:42px 20px;text-align:center;font:1000 18px/1.4 "Arial Black",sans-serif;color:#fff}.lb-empty small{color:#9e91a7;font-size:11px}
+@media(max-width:780px){.lb-wrap{grid-template-columns:1fr}.lb-copy{text-align:center}.lb-copy .section-kicker{text-align:center}.lb-copy p{margin-left:auto;margin-right:auto}.lb-title{font-size:clamp(50px,15vw,82px)}.lb-board{transform:none}.leaderboard-section{padding-top:55px}}
