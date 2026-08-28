@@ -1,4 +1,4 @@
-// Direct asset remap for illustrated build. Runs before main.js preload.
+// Direct illustrated asset remap. Patches LoaderPlugin instances as Phaser creates them.
 (function(){
   const map={
     sky:'assets/v5/sky.svg',
@@ -16,10 +16,23 @@
     gorilla_smash:'assets/v5/gorilla.svg',
     gorilla_portrait:'assets/v5/gorilla.svg'
   };
-  const p=Phaser.Loader.LoaderPlugin.prototype;
-  const image=p.image;
-  p.image=function(key,url,xhr){
-    if(typeof key==='string'&&map[key]) return this.svg(key,map[key]);
-    return image.call(this,key,url,xhr);
+
+  const FTM=Phaser.Loader.FileTypesManager;
+  const originalInstall=FTM.install;
+
+  FTM.install=function(loader){
+    originalInstall.call(this,loader);
+    if(loader.__rrV5Wrapped) return;
+    loader.__rrV5Wrapped=true;
+    const originalImage=loader.image;
+    loader.image=function(key,url,xhrSettings){
+      if(typeof key==='string' && map[key]){
+        return this.svg(key,map[key]);
+      }
+      if(key && typeof key==='object' && !Array.isArray(key) && map[key.key]){
+        return this.svg(key.key,map[key.key]);
+      }
+      return originalImage.call(this,key,url,xhrSettings);
+    };
   };
 })();
