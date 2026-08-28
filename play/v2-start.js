@@ -1,133 +1,53 @@
-// Rainbow Rampage V2 character select.
-// Uses the existing portraits/stats and only replaces presentation.
+// Rainbow Rampage — Game Art V2 character select preview.
 (function () {
   showStart = function showStartV2(scene) {
     startPanel = scene.add.container(480, 286).setScrollFactor(0).setDepth(100);
+    const backdrop = scene.add.rectangle(0,0,920,480,0x030006,.985).setStrokeStyle(5,0xffffff,.95);
+    const inner = scene.add.rectangle(0,0,902,462,0x0c0711,.98).setStrokeStyle(3,0xff00c8,.72);
+    startPanel.add([backdrop,inner]);
 
-    const backdrop = scene.add.rectangle(0, 0, 900, 468, 0x050008, 0.975);
-    backdrop.setStrokeStyle(5, 0xffffff, 0.95);
-    const inner = scene.add.rectangle(0, 0, 884, 452, 0x100914, 0.96);
-    inner.setStrokeStyle(3, 0xff00c8, 0.82);
-    startPanel.add([backdrop, inner]);
+    const logo=scene.add.image(0,-184,'logoWide').setScale(.58);
+    const sub=scene.add.text(0,-133,'CHOOSE YOUR RAMPAGER',{fontFamily:'Arial Black',fontSize:'22px',color:'#ffffff',stroke:'#000',strokeThickness:7}).setOrigin(.5);
+    const tag=scene.add.text(0,-105,'GAME ART V2  //  PICK YOUR CHAOS',{fontFamily:'Arial Black',fontSize:'10px',color:'#fff200',stroke:'#000',strokeThickness:4}).setOrigin(.5);
+    startPanel.add([logo,sub,tag]);
 
-    const slash1 = scene.add.rectangle(-235, -177, 300, 14, 0xdfff00, 0.95).setAngle(-3);
-    const slash2 = scene.add.rectangle(225, -170, 245, 10, 0xff006e, 0.9).setAngle(4);
-    const logo = scene.add.image(0, -178, 'logoWide').setScale(0.62);
-    const sub = scene.add.text(0, -128, 'CHOOSE YOUR RAMPAGER', {
-      fontFamily: 'Arial Black', fontSize: '22px', color: '#ffffff',
-      stroke: '#000000', strokeThickness: 7
-    }).setOrigin(0.5);
-    const subLine = scene.add.text(0, -102, 'SMASH HARDER  •  RUN FURTHER  •  OWN THE BOARD', {
-      fontFamily: 'Arial Black', fontSize: '10px', color: '#dfff00',
-      stroke: '#000000', strokeThickness: 4
-    }).setOrigin(0.5);
-    startPanel.add([slash1, slash2, logo, sub, subLine]);
-
-    const chars = [
-      { key:'gorilla', name:'GORILLA', role:'BALANCED', color:0xff315f, stats:[4,4,4] },
-      { key:'croc', name:'CROC', role:'SPEED', color:0xa7ff22, stats:[3,4,5] },
-      { key:'cow', name:'COW', role:'TANK', color:0xff4ccf, stats:[5,3,3] },
-      { key:'eagle', name:'EAGLE', role:'AIR', color:0x31dfff, stats:[3,3,5] }
+    const chars=[
+      {key:'gorilla',name:'GORILLA',role:'BALANCED',color:0xffa400,stats:[4,4,4],accent:'#ffb000'},
+      {key:'croc',name:'CROC',role:'SPEED',color:0x55ff19,stats:[3,4,5],accent:'#62ff24'},
+      {key:'cow',name:'COW',role:'TANK',color:0xff25d0,stats:[5,3,3],accent:'#ff32d6'},
+      {key:'eagle',name:'EAGLE',role:'AIR',color:0x16dfff,stats:[3,3,5],accent:'#20e5ff'}
     ];
+    let choosing=false;
+    const choose=(key,card,portrait)=>{if(choosing||isStarted)return;choosing=true;startPanel.list.forEach(o=>{if(o&&o.input&&o.disableInteractive)o.disableInteractive();});card.setFillStyle(0xffffff,.2);portrait.setScale(.69);scene.time.delayedCall(1,()=>startGame(key));};
 
-    const makeStat = (x, y, label, amount, color) => {
-      const labelText = scene.add.text(x, y, label, {
-        fontFamily:'Arial Black', fontSize:'8px', color:'#ffffff', stroke:'#000000', strokeThickness:3
-      }).setOrigin(0, 0.5);
-      startPanel.add(labelText);
-      for (let i=0;i<5;i++) {
-        const bar = scene.add.rectangle(x + 53 + i*12, y, 9, 7, i < amount ? color : 0x2a2630, 1);
-        bar.setStrokeStyle(1, 0xffffff, i < amount ? 0.55 : 0.16);
-        startPanel.add(bar);
-      }
-    };
+    chars.forEach((ch,i)=>{
+      const x=-318+i*212;
+      const glow=scene.add.rectangle(x,28,194,246,ch.color,.10).setStrokeStyle(8,ch.color,.18);
+      const card=scene.add.rectangle(x,28,184,236,0x050508,.99).setStrokeStyle(4,ch.color,1);
+      const artBack=scene.add.rectangle(x,-28,166,126,ch.color,.16).setStrokeStyle(2,0xffffff,.25);
+      const stripe=scene.add.rectangle(x,-86,166,8,ch.color,.95);
+      const portrait=scene.add.image(x,-29,`${ch.key}_portrait`).setScale(.63);
+      const shade=scene.add.rectangle(x,20,166,18,0x000000,.38);
+      const plate=scene.add.rectangle(x,51,158,38,ch.color,.98).setAngle(-2);
+      const name=scene.add.text(x,50,ch.name,{fontFamily:'Arial Black',fontSize:'20px',color:'#050208',stroke:'#ffffff',strokeThickness:1}).setOrigin(.5).setAngle(-2);
+      const role=scene.add.text(x,78,ch.role,{fontFamily:'Arial Black',fontSize:'10px',color:ch.accent,stroke:'#000',strokeThickness:4}).setOrigin(.5);
+      startPanel.add([glow,card,artBack,stripe,portrait,shade,plate,name,role]);
 
-    // Selection must fire exactly once. Previously every overlapping child was interactive,
-    // so one tap could dispatch several pointerdown handlers while the panel was destroying.
-    let choosing = false;
-    const chooseCharacter = (key, cardBg, portrait) => {
-      if (choosing || isStarted) return;
-      choosing = true;
-
-      // Stop the start screen receiving any further pointer events immediately.
-      startPanel.list.forEach(obj => {
-        if (obj && obj.input && obj.disableInteractive) obj.disableInteractive();
+      ['HEALTH','DAMAGE','SPEED'].forEach((label,j)=>{
+        const y=101+j*16;
+        const t=scene.add.text(x-70,y,label,{fontFamily:'Arial Black',fontSize:'8px',color:'#fff',stroke:'#000',strokeThickness:3}).setOrigin(0,.5);startPanel.add(t);
+        for(let b=0;b<5;b++){const r=scene.add.rectangle(x-14+b*14,y,11,8,b<ch.stats[j]?ch.color:0x242028,1).setStrokeStyle(1,0xffffff,b<ch.stats[j]?.5:.12);startPanel.add(r);}
       });
-
-      // Tiny confirmation punch, then enter the real game on the next tick. This keeps
-      // Phaser's input dispatch separate from destruction of the container that was tapped.
-      if (cardBg) cardBg.setFillStyle(0xffffff, 0.18);
-      if (portrait) portrait.setScale(0.60);
-      scene.time.delayedCall(1, () => startGame(key));
-    };
-
-    chars.forEach((ch, i) => {
-      const x = -315 + i * 210;
-      const cardBg = scene.add.rectangle(x, 30, 184, 235, 0x07070a, 0.98);
-      cardBg.setStrokeStyle(4, ch.color, 1);
-      const innerCard = scene.add.rectangle(x, 30, 170, 221, 0x16121a, 0.92);
-      innerCard.setStrokeStyle(2, 0xffffff, 0.3);
-
-      const portraitBack = scene.add.rectangle(x, -18, 156, 118, ch.color, 0.12);
-      portraitBack.setStrokeStyle(2, ch.color, 0.55);
-      const portrait = scene.add.image(x, -22, `${ch.key}_portrait`).setScale(0.54);
-
-      const namePlate = scene.add.rectangle(x, 52, 150, 33, ch.color, 0.96).setAngle(-1.5);
-      const name = scene.add.text(x, 51, ch.name, {
-        fontFamily:'Arial Black', fontSize:'19px', color:'#080509', stroke:'#ffffff', strokeThickness:1
-      }).setOrigin(0.5).setAngle(-1.5);
-      const role = scene.add.text(x, 77, ch.role, {
-        fontFamily:'Arial Black', fontSize:'10px', color:Phaser.Display.Color.IntegerToColor(ch.color).rgba,
-        stroke:'#000000', strokeThickness:4
-      }).setOrigin(0.5);
-
-      startPanel.add([cardBg, innerCard, portraitBack, portrait, namePlate, name, role]);
-      makeStat(x - 68, 98, 'HEALTH', ch.stats[0], 0x63ff45);
-      makeStat(x - 68, 114, 'DAMAGE', ch.stats[1], 0xff3b44);
-      makeStat(x - 68, 130, 'SPEED', ch.stats[2], 0x26baff);
-
-      const tap = scene.add.text(x, 155, 'TAP TO RAMPAGE', {
-        fontFamily:'Arial Black', fontSize:'9px', color:'#ffffff', stroke:'#000000', strokeThickness:4
-      }).setOrigin(0.5);
-      startPanel.add(tap);
-
-      // One hit target per card; visual children deliberately stay non-interactive.
-      cardBg.setInteractive({ useHandCursor:true });
-      cardBg.on('pointerdown', () => chooseCharacter(ch.key, cardBg, portrait));
-      cardBg.on('pointerover', () => {
-        if (choosing) return;
-        cardBg.setScale(1.045);
-        portrait.setScale(0.57);
-        cardBg.setFillStyle(ch.color, 0.15);
-      });
-      cardBg.on('pointerout', () => {
-        if (choosing) return;
-        cardBg.setScale(1);
-        portrait.setScale(0.54);
-        cardBg.setFillStyle(0x07070a, 0.98);
-      });
-
-      scene.tweens.add({
-        targets: portrait,
-        y: portrait.y - 4,
-        duration: 900 + i*100,
-        yoyo: true,
-        repeat: -1,
-        ease: 'Sine.easeInOut'
-      });
+      const tap=scene.add.text(x,158,'TAP TO RAMPAGE',{fontFamily:'Arial Black',fontSize:'9px',color:'#fff200',stroke:'#000',strokeThickness:4}).setOrigin(.5);startPanel.add(tap);
+      card.setInteractive({useHandCursor:true});
+      card.on('pointerdown',()=>choose(ch.key,card,portrait));
+      card.on('pointerover',()=>{if(choosing)return;glow.setAlpha(.32);card.setScale(1.045);portrait.setScale(.68);});
+      card.on('pointerout',()=>{if(choosing)return;glow.setAlpha(1);card.setScale(1);portrait.setScale(.63);});
+      scene.tweens.add({targets:glow,alpha:{from:.55,to:1},duration:650+i*90,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+      scene.tweens.add({targets:portrait,y:portrait.y-4,duration:900+i*100,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
     });
-
-    const footer = scene.add.text(0, 207, 'BUILD.  SMASH.  RAGE.  REPEAT.', {
-      fontFamily:'Arial Black', fontSize:'16px', color:'#ffffff', stroke:'#000000', strokeThickness:6
-    }).setOrigin(0.5);
-    const rainbow = ['#ff2b45','#ff9d00','#fff200','#58ff37','#00eaff','#8a55ff','#ff20cc'];
-    scene.tweens.addCounter({
-      from:0,to:rainbow.length-1,duration:1600,repeat:-1,
-      onUpdate:t => { if (footer.active) footer.setColor(rainbow[Math.floor(t.getValue()) % rainbow.length]); }
-    });
-    startPanel.add(footer);
-
-    startPanel.setScale(0.96).setAlpha(0);
-    scene.tweens.add({ targets:startPanel, alpha:1, scale:1, duration:320, ease:'Back.easeOut' });
+    const footer=scene.add.text(0,211,'GO FAST  •  SMASH HARD  •  RACK UP COINS',{fontFamily:'Arial Black',fontSize:'15px',color:'#fff',stroke:'#000',strokeThickness:6}).setOrigin(.5);startPanel.add(footer);
+    const rainbow=['#ff2b45','#ff9d00','#fff200','#58ff37','#00eaff','#8a55ff','#ff20cc'];scene.tweens.addCounter({from:0,to:rainbow.length-1,duration:1600,repeat:-1,onUpdate:t=>{if(footer.active)footer.setColor(rainbow[Math.floor(t.getValue())%rainbow.length]);}});
+    startPanel.setScale(.96).setAlpha(0);scene.tweens.add({targets:startPanel,alpha:1,scale:1,duration:320,ease:'Back.easeOut'});
   };
 })();
