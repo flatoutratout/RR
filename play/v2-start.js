@@ -63,10 +63,18 @@
 
       const portraitBack = scene.add.rectangle(x, -18, 156, 118, ch.color, 0.12);
       portraitBack.setStrokeStyle(2, ch.color, 0.55);
-      // Gorilla source portrait has more transparent padding than the legacy portraits.
-      // Scale it independently so the visible character actually fills the portrait window.
       const portraitBaseScale = ch.key === 'gorilla' ? 1.12 : 0.54;
       const portraitHoverScale = ch.key === 'gorilla' ? 1.18 : 0.57;
+
+      // Gorilla art doesn't have the baked white edge the legacy portraits have.
+      // Render a slightly larger white silhouette behind it to match the set.
+      let portraitOutline = null;
+      if (ch.key === 'gorilla') {
+        portraitOutline = scene.add.image(x, -22, `${ch.key}_portrait`)
+          .setScale(1.18)
+          .setTintFill(0xffffff)
+          .setAlpha(0.95);
+      }
       const portrait = scene.add.image(x, -22, `${ch.key}_portrait`).setScale(portraitBaseScale);
 
       const namePlate = scene.add.rectangle(x, 52, 150, 33, ch.color, 0.96).setAngle(-1.5);
@@ -78,7 +86,10 @@
         stroke:'#000000', strokeThickness:4
       }).setOrigin(0.5);
 
-      startPanel.add([cardBg, innerCard, portraitBack, portrait, namePlate, name, role]);
+      const cardItems = [cardBg, innerCard, portraitBack];
+      if (portraitOutline) cardItems.push(portraitOutline);
+      cardItems.push(portrait, namePlate, name, role);
+      startPanel.add(cardItems);
       makeStat(x - 68, 98, 'HEALTH', ch.stats[0], 0x63ff45);
       makeStat(x - 68, 114, 'DAMAGE', ch.stats[1], 0xff3b44);
       makeStat(x - 68, 130, 'SPEED', ch.stats[2], 0x26baff);
@@ -94,17 +105,20 @@
         if (choosing) return;
         cardBg.setScale(1.045);
         portrait.setScale(portraitHoverScale);
+        if (portraitOutline) portraitOutline.setScale(1.24);
         cardBg.setFillStyle(ch.color, 0.15);
       });
       cardBg.on('pointerout', () => {
         if (choosing) return;
         cardBg.setScale(1);
         portrait.setScale(portraitBaseScale);
+        if (portraitOutline) portraitOutline.setScale(1.18);
         cardBg.setFillStyle(0x07070a, 0.98);
       });
 
+      const floatTargets = portraitOutline ? [portrait, portraitOutline] : [portrait];
       scene.tweens.add({
-        targets: portrait,
+        targets: floatTargets,
         y: portrait.y - 4,
         duration: 900 + i*100,
         yoyo: true,
