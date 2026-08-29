@@ -8,8 +8,6 @@
     const scene = player.scene;
     player.setScale(1.08);
     player.baseScale = 1.08;
-
-    // Cropped gameplay texture: visible Gorilla now fills the source box.
     player.setOrigin(0.5, 1);
     player.setY(PLAYER_START_Y);
 
@@ -25,32 +23,23 @@
       cam.setFollowOffset(-165, 0);
     }
 
-    if (buildings && buildings.children) {
-      buildings.children.iterate(b => { if (b && b.body) b.body.enable = false; });
-    }
-
-    if (choppers && choppers.children) {
-      choppers.children.iterate(c => {
-        if (!c || !c.body) return;
-        c.body.setSize(96, 42, true);
-        c.body.allowGravity = false;
-      });
-    }
+    if (buildings && buildings.children) buildings.children.iterate(b => { if (b && b.body) b.body.enable = false; });
+    if (choppers && choppers.children) choppers.children.iterate(c => {
+      if (!c || !c.body) return;
+      c.body.setSize(96, 42, true);
+      c.body.allowGravity = false;
+    });
   };
 
   const originalUpdate = update;
   update = function updateWithPreviewPhysics(time, delta) {
     if (selectedCharacter === 'gorilla' && player) {
-      if (buildings && buildings.children) {
-        buildings.children.iterate(b => { if (b && b.body) b.body.enable = false; });
-      }
-      if (choppers && choppers.children) {
-        choppers.children.iterate(c => {
-          if (!c || !c.body) return;
-          c.body.setSize(96, 42, true);
-          c.body.allowGravity = false;
-        });
-      }
+      if (buildings && buildings.children) buildings.children.iterate(b => { if (b && b.body) b.body.enable = false; });
+      if (choppers && choppers.children) choppers.children.iterate(c => {
+        if (!c || !c.body) return;
+        c.body.setSize(96, 42, true);
+        c.body.allowGravity = false;
+      });
     }
     return originalUpdate.call(this, time, delta);
   };
