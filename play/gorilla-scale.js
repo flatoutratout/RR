@@ -9,10 +9,16 @@
     player.setScale(1.08);
     player.baseScale = 1.08;
 
-    // Tight body around the visible Gorilla only.
+    // Anchor the artwork by its feet instead of its centre. The 520x260 source contains
+    // lots of transparent canvas; bottom-origin keeps the visible Gorilla on the street.
+    player.setOrigin(0.5, 1);
+    player.setY(PLAYER_START_Y);
+
+    // Tight body around the visible Gorilla only, positioned near the bottom of the source frame.
     if (player.body && player.body.setSize) {
-      player.body.setSize(66, 96, false);
-      player.body.setOffset(227, 150);
+      player.body.setSize(66, 92, false);
+      player.body.setOffset(227, 164);
+      player.body.updateFromGameObject();
     }
 
     if (scene && scene.cameras && scene.cameras.main) {
@@ -21,16 +27,12 @@
       cam.setFollowOffset(-165, 0);
     }
 
-    // The legacy building PNG carries a huge source-space body. Disable that body as a
-    // physical wall: main.js already uses its tighter visible-core rectangle for blocking/smashing.
     if (buildings && buildings.children) {
       buildings.children.iterate(b => {
         if (b && b.body) b.body.enable = false;
       });
     }
 
-    // Give helicopters explicit compact bodies matching the visible aircraft rather than
-    // transparent image bounds. Keep them non-solid; overlap/projectiles handle damage.
     if (choppers && choppers.children) {
       choppers.children.iterate(c => {
         if (!c || !c.body) return;
@@ -40,10 +42,14 @@
     }
   };
 
-  // Patch newly spawned enemies/buildings every frame because endless chunks are created after start.
   const originalUpdate = update;
   update = function updateWithPreviewPhysics(time, delta) {
-    if (selectedCharacter === 'gorilla') {
+    if (selectedCharacter === 'gorilla' && player) {
+      // Texture swaps preserve the custom bottom origin; keep the feet locked to the floor
+      // whenever the physics body reports that we're grounded.
+      if (player.body && (player.body.blocked.down || player.body.touching.down) && player.y > PLAYER_START_Y) {
+        player.y = PLAYER_START_Y;
+      }
       if (buildings && buildings.children) {
         buildings.children.iterate(b => { if (b && b.body) b.body.enable = false; });
       }
@@ -58,8 +64,6 @@
     return originalUpdate.call(this, time, delta);
   };
 
-  // Helicopters need a reachable melee window. Ground smash can now clip a low helicopter
-  // if it is close horizontally, while normal overlap still handles direct contact.
   const originalDoSmash = doSmash;
   doSmash = function doSmashWithAirHit(scene) {
     if (selectedCharacter === 'gorilla' && choppers && player && player.body) {
