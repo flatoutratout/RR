@@ -9,8 +9,7 @@
     player.setScale(1.08);
     player.baseScale = 1.08;
 
-    // Cropped 130x90 gameplay texture: visible art now nearly fills the source box.
-    // Bottom origin locks the Gorilla's feet to the same street baseline as the tanks.
+    // Cropped gameplay texture: visible Gorilla now fills the source box.
     player.setOrigin(0.5, 1);
     player.setY(PLAYER_START_Y);
 
