@@ -50,7 +50,7 @@
         if (obj && obj.input && obj.disableInteractive) obj.disableInteractive();
       });
       if (cardBg) cardBg.setFillStyle(0xffffff, 0.18);
-      if (portrait) portrait.setScale(key === 'gorilla' ? 0.88 : 0.60);
+      if (portrait) portrait.setScale(key === 'gorilla' ? 1.18 : 0.60);
       scene.time.delayedCall(1, () => startGame(key));
     };
 
@@ -63,8 +63,10 @@
 
       const portraitBack = scene.add.rectangle(x, -18, 156, 118, ch.color, 0.12);
       portraitBack.setStrokeStyle(2, ch.color, 0.55);
-      const portraitBaseScale = ch.key === 'gorilla' ? 0.82 : 0.54;
-      const portraitHoverScale = ch.key === 'gorilla' ? 0.86 : 0.57;
+      // Gorilla source portrait has more transparent padding than the legacy portraits.
+      // Scale it independently so the visible character actually fills the portrait window.
+      const portraitBaseScale = ch.key === 'gorilla' ? 1.12 : 0.54;
+      const portraitHoverScale = ch.key === 'gorilla' ? 1.18 : 0.57;
       const portrait = scene.add.image(x, -22, `${ch.key}_portrait`).setScale(portraitBaseScale);
 
       const namePlate = scene.add.rectangle(x, 52, 150, 33, ch.color, 0.96).setAngle(-1.5);
