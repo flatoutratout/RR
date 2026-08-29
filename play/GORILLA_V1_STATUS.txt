@@ -1,0 +1,1 @@
+Gorilla V1 isolated art branch. Source artwork generated, cropped, alpha-cleaned and normalized for the existing 520x260 gameplay frame geometry. No environment/enemy/HUD assets are changed on this branch.
