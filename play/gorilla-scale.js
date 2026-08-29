@@ -1,68 +1,136 @@
-// Gorilla V1 preview fit patch.
+// Gorilla V1 preview gameplay-fit + animation patch.
 (function () {
-  const crop = { x: 29, y: 10, w: 72, h: 78 };
-  const actions = ['idle', 'run1', 'run2', 'jump', 'smash'];
+  const GORILLA_SCALE = 1.08;
+  const FLOOR_Y = PLAYER_START_Y;
 
-  function addTightFrames(scene) {
-    actions.forEach(action => {
-      const key = `gorilla_${action}`;
-      const tex = scene.textures.get(key);
-      if (tex && tex.key !== '__MISSING' && !tex.has('tight')) {
-        tex.add('tight', 0, crop.x, crop.y, crop.w, crop.h);
-      }
-    });
+  function fitGorillaBody() {
+    if (!player || selectedCharacter !== 'gorilla') return;
+    player.setOrigin(0.5, 1);
+    if (player.body && player.body.setSize) {
+      // Collision hugs the visible Gorilla, not the old 520x260 transparent canvas.
+      player.body.setSize(70, 82, false);
+      player.body.setOffset(225, 174);
+      player.body.updateFromGameObject();
+    }
   }
 
-  const baseSetPlayerAction = setPlayerAction;
-  setPlayerAction = function(action) {
-    if (selectedCharacter !== 'gorilla') return baseSetPlayerAction(action);
-    if (!player || !isStarted || isGameOver) return;
-    const key = `gorilla_${action}`;
-    if (player.texture.key !== key || player.frame.name !== 'tight') {
-      player.setTexture(key, 'tight');
-    }
-  };
+  function applyGorillaPose(action) {
+    if (!player || selectedCharacter !== 'gorilla') return;
 
-  const baseStartGame = startGame;
-  startGame = function(chosen) {
-    baseStartGame(chosen);
+    // All five legacy Gorilla texture paths currently contain the same source artwork.
+    // Give each gameplay state its own silhouette/motion until the final dedicated pose art lands.
+    let sx = GORILLA_SCALE;
+    let sy = GORILLA_SCALE;
+    let angle = 0;
+    let yOffset = 0;
+
+    if (action === 'run1') {
+      sx = 1.12;
+      sy = 1.02;
+      angle = -4;
+      yOffset = 1;
+    } else if (action === 'run2') {
+      sx = 1.02;
+      sy = 1.13;
+      angle = 4;
+      yOffset = -3;
+    } else if (action === 'jump') {
+      sx = 0.98;
+      sy = 1.18;
+      angle = player.flipX ? 9 : -9;
+    } else if (action === 'smash') {
+      sx = 1.20;
+      sy = 0.94;
+      angle = player.flipX ? -7 : 7;
+      yOffset = 4;
+    }
+
+    player.setScale(sx, sy);
+    player.baseScale = GORILLA_SCALE;
+    player.setAngle(angle);
+
+    // Only pin to the street while grounded. Jump physics remains free vertically.
+    if (action !== 'jump' && player.body && (player.body.blocked.down || player.body.touching.down)) {
+      player.y = FLOOR_Y + yOffset;
+    }
+    fitGorillaBody();
+  }
+
+  const originalStartGame = startGame;
+  startGame = function startGameWithGorillaFit(chosen) {
+    originalStartGame(chosen);
     if (selectedCharacter !== 'gorilla' || !player) return;
 
     const scene = player.scene;
-    addTightFrames(scene);
-    player.setTexture('gorilla_idle', 'tight');
+    player.setScale(GORILLA_SCALE);
+    player.baseScale = GORILLA_SCALE;
     player.setOrigin(0.5, 1);
-    player.setScale(1.08);
-    player.baseScale = 1.08;
-    player.setY(PLAYER_START_Y);
+    player.setY(FLOOR_Y);
+    fitGorillaBody();
 
-    if (player.body) {
-      player.body.setSize(66, 74, false);
-      player.body.setOffset(3, 4);
-      player.body.updateFromGameObject();
-    }
-
-    if (scene.cameras && scene.cameras.main) {
-      scene.cameras.main.setDeadzone(250, 120);
-      scene.cameras.main.setFollowOffset(-165, 0);
+    if (scene && scene.cameras && scene.cameras.main) {
+      const cam = scene.cameras.main;
+      cam.setDeadzone(250, 120);
+      cam.setFollowOffset(-165, 0);
     }
 
     if (buildings && buildings.children) {
       buildings.children.iterate(b => { if (b && b.body) b.body.enable = false; });
     }
+    if (choppers && choppers.children) {
+      choppers.children.iterate(c => {
+        if (!c || !c.body) return;
+        c.body.setSize(96, 42, true);
+        c.body.allowGravity = false;
+      });
+    }
   };
 
-  const baseUpdate = update;
-  update = function(time, delta) {
+  // Keep the game's normal texture-state logic, then add a visibly different pose per state.
+  const originalSetPlayerAction = setPlayerAction;
+  setPlayerAction = function setPlayerActionWithGorillaMotion(action) {
+    originalSetPlayerAction(action);
+    if (selectedCharacter === 'gorilla') applyGorillaPose(action);
+  };
+
+  const originalUpdate = update;
+  update = function updateWithPreviewPhysics(time, delta) {
     if (selectedCharacter === 'gorilla' && player) {
-      if (player.body) {
-        player.body.setSize(66, 74, false);
-        player.body.setOffset(3, 4);
-      }
       if (buildings && buildings.children) {
         buildings.children.iterate(b => { if (b && b.body) b.body.enable = false; });
       }
+      if (choppers && choppers.children) {
+        choppers.children.iterate(c => {
+          if (!c || !c.body) return;
+          c.body.setSize(96, 42, true);
+          c.body.allowGravity = false;
+        });
+      }
     }
-    return baseUpdate.call(this, time, delta);
+    return originalUpdate.call(this, time, delta);
+  };
+
+  const originalDoSmash = doSmash;
+  doSmash = function doSmashWithAirHit(scene) {
+    if (selectedCharacter === 'gorilla' && choppers && player && player.body) {
+      const dir = player.flipX ? -1 : 1;
+      choppers.children.iterate(c => {
+        if (!c || !c.active) return;
+        const dx = (c.x - player.x) * dir;
+        const dy = Math.abs(c.y - (player.y - 70));
+        if (dx >= -10 && dx <= 145 && dy <= 155) {
+          c.hp = (c.hp || 1) - 1;
+          if (c.hp <= 0) {
+            const cx = c.x, cy = c.y;
+            c.disableBody(true, true);
+            addScore(c.enemyType === 'elite' ? 150 : 90);
+            addRage(22);
+            burst(scene, cx, cy, 0xff66ff);
+            floatText(scene, cx, cy - 30, 'WRECKED!', '#ff66ff');
+          }
+        }
+      });
+    }
+    return originalDoSmash.call(this, scene);
   };
 })();
