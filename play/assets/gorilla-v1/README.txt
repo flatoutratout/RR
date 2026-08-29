@@ -1,0 +1,1 @@
+Rainbow Rampage gorilla-art-v1 production asset family. WebP frames are 520x260; portrait is 300x300. Original game assets remain untouched until approval.
