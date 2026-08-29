@@ -9,15 +9,14 @@
     player.setScale(1.08);
     player.baseScale = 1.08;
 
-    // Anchor the artwork by its feet instead of its centre. The 520x260 source contains
-    // lots of transparent canvas; bottom-origin keeps the visible Gorilla on the street.
+    // Cropped 130x90 gameplay texture: visible art now nearly fills the source box.
+    // Bottom origin locks the Gorilla's feet to the same street baseline as the tanks.
     player.setOrigin(0.5, 1);
     player.setY(PLAYER_START_Y);
 
-    // Tight body around the visible Gorilla only, positioned near the bottom of the source frame.
     if (player.body && player.body.setSize) {
-      player.body.setSize(66, 92, false);
-      player.body.setOffset(227, 164);
+      player.body.setSize(72, 78, false);
+      player.body.setOffset(29, 10);
       player.body.updateFromGameObject();
     }
 
@@ -28,9 +27,7 @@
     }
 
     if (buildings && buildings.children) {
-      buildings.children.iterate(b => {
-        if (b && b.body) b.body.enable = false;
-      });
+      buildings.children.iterate(b => { if (b && b.body) b.body.enable = false; });
     }
 
     if (choppers && choppers.children) {
@@ -45,11 +42,6 @@
   const originalUpdate = update;
   update = function updateWithPreviewPhysics(time, delta) {
     if (selectedCharacter === 'gorilla' && player) {
-      // Texture swaps preserve the custom bottom origin; keep the feet locked to the floor
-      // whenever the physics body reports that we're grounded.
-      if (player.body && (player.body.blocked.down || player.body.touching.down) && player.y > PLAYER_START_Y) {
-        player.y = PLAYER_START_Y;
-      }
       if (buildings && buildings.children) {
         buildings.children.iterate(b => { if (b && b.body) b.body.enable = false; });
       }
