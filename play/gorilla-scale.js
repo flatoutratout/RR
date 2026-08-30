@@ -1,59 +1,14 @@
-// Gorilla V1 preview gameplay-fit + animation patch.
+// Gorilla V1 preview gameplay-fit patch.
 (function () {
   const GORILLA_SCALE = 1.08;
-  const FLOOR_Y = PLAYER_START_Y;
 
   function fitGorillaBody() {
     if (!player || selectedCharacter !== 'gorilla') return;
-    player.setOrigin(0.5, 1);
     if (player.body && player.body.setSize) {
-      // Collision hugs the visible Gorilla, not the old 520x260 transparent canvas.
+      // Tight collision body around the visible Gorilla while leaving Phaser in charge of movement.
       player.body.setSize(70, 82, false);
       player.body.setOffset(225, 174);
-      player.body.updateFromGameObject();
     }
-  }
-
-  function applyGorillaPose(action) {
-    if (!player || selectedCharacter !== 'gorilla') return;
-
-    // All five legacy Gorilla texture paths currently contain the same source artwork.
-    // Give each gameplay state its own silhouette/motion until the final dedicated pose art lands.
-    let sx = GORILLA_SCALE;
-    let sy = GORILLA_SCALE;
-    let angle = 0;
-    let yOffset = 0;
-
-    if (action === 'run1') {
-      sx = 1.12;
-      sy = 1.02;
-      angle = -4;
-      yOffset = 1;
-    } else if (action === 'run2') {
-      sx = 1.02;
-      sy = 1.13;
-      angle = 4;
-      yOffset = -3;
-    } else if (action === 'jump') {
-      sx = 0.98;
-      sy = 1.18;
-      angle = player.flipX ? 9 : -9;
-    } else if (action === 'smash') {
-      sx = 1.20;
-      sy = 0.94;
-      angle = player.flipX ? -7 : 7;
-      yOffset = 4;
-    }
-
-    player.setScale(sx, sy);
-    player.baseScale = GORILLA_SCALE;
-    player.setAngle(angle);
-
-    // Only pin to the street while grounded. Jump physics remains free vertically.
-    if (action !== 'jump' && player.body && (player.body.blocked.down || player.body.touching.down)) {
-      player.y = FLOOR_Y + yOffset;
-    }
-    fitGorillaBody();
   }
 
   const originalStartGame = startGame;
@@ -64,8 +19,6 @@
     const scene = player.scene;
     player.setScale(GORILLA_SCALE);
     player.baseScale = GORILLA_SCALE;
-    player.setOrigin(0.5, 1);
-    player.setY(FLOOR_Y);
     fitGorillaBody();
 
     if (scene && scene.cameras && scene.cameras.main) {
@@ -74,6 +27,8 @@
       cam.setFollowOffset(-165, 0);
     }
 
+    // Legacy image bodies are larger than the visible artwork. The game already uses
+    // tighter visible-core rectangles for building blocking and smashing.
     if (buildings && buildings.children) {
       buildings.children.iterate(b => { if (b && b.body) b.body.enable = false; });
     }
@@ -86,11 +41,17 @@
     }
   };
 
-  // Keep the game's normal texture-state logic, then add a visibly different pose per state.
+  // Do not change player origin, y-position, scale, angle or body during movement states.
+  // main.js owns velocity/jump/action state; this patch only keeps collision bounds sane.
   const originalSetPlayerAction = setPlayerAction;
-  setPlayerAction = function setPlayerActionWithGorillaMotion(action) {
+  setPlayerAction = function setPlayerActionWithoutMovementOverride(action) {
     originalSetPlayerAction(action);
-    if (selectedCharacter === 'gorilla') applyGorillaPose(action);
+    if (selectedCharacter === 'gorilla' && player) {
+      player.setScale(GORILLA_SCALE);
+      player.baseScale = GORILLA_SCALE;
+      player.setAngle(0);
+      fitGorillaBody();
+    }
   };
 
   const originalUpdate = update;
