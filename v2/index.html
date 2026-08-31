@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+  <meta name="theme-color" content="#07010d" />
+  <title>Rainbow Rampage V2</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main id="app">
+    <div id="game"></div>
+    <div id="rotate"><div class="rotate-icon">↻</div><strong>ROTATE TO RAMPAGE</strong><span>Landscape works best.</span></div>
+    <a class="back" href="/">← SITE</a>
+    <div class="build-stamp">RR // V2 FRESH</div>
+    <div id="mobile-controls" aria-hidden="true">
+      <div class="move-pad">
+        <button data-control="left" aria-label="Move left">◀</button>
+        <button data-control="right" aria-label="Move right">▶</button>
+      </div>
+      <div class="action-pad">
+        <button data-control="jump" class="jump" aria-label="Jump">JUMP</button>
+        <button data-control="smash" class="smash" aria-label="Smash">SMASH</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+  <script src="./config.js"></script>
+  <script src="./game.js"></script>
+</body>
+</html>
