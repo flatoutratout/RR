@@ -3,7 +3,7 @@ window.RR2 = {
   height: 540,
   floorY: 468,
   worldWidth: 120000,
-  assetRoot: 'https://raw.githubusercontent.com/flatoutratout/RR/main/play/assets/',
+  assetRoot: 'https://cdn.jsdelivr.net/gh/flatoutratout/RR@main/play/assets/',
   characters: {
     gorilla: { name: 'GORILLA', speed: 235, jump: 540, hp: 6, rageGain: 1.0, scale: 1.02, blurb: 'Balanced wrecking machine' },
     croc:    { name: 'CROC', speed: 270, jump: 515, hp: 5, rageGain: 1.08, scale: 1.00, blurb: 'Fast and savage' },
