@@ -20,14 +20,18 @@
     if(!scene.buildings)return;
     scene.buildings.getChildren().forEach(b=>{
       if(!b.active||!b.body)return;
-      const stamp=`facade:${b.displayWidth|0}:${b.displayHeight|0}`;
+      const stamp=`persist:${b.displayWidth|0}:${b.displayHeight|0}`;
       if(b.__rrBodyStamp===stamp)return;
       b.__rrBodyStamp=stamp;
-      // Keep the collision wall inside the visible facade. The source PNG has a very wide
-      // transparent canvas, so the useful body is deliberately narrow and centred.
+
+      // IMPORTANT: refresh first, trim second. Calling updateFromGameObject after trimming
+      // was rebuilding the full static body and effectively undoing the facade collider.
+      if(typeof b.refreshBody==='function') b.refreshBody();
+      else if(b.body.updateFromGameObject) b.body.updateFromGameObject();
+
+      // Tight wall centred on the visible tower core.
       b.body.setSize(b.width*.20,b.height*.84,false);
       b.body.setOffset(b.width*.40,b.height*.16);
-      if(b.body.updateFromGameObject)b.body.updateFromGameObject();
     });
   }
 
