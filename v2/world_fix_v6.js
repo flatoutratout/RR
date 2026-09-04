@@ -75,9 +75,10 @@
       const stamp=`${b.displayWidth|0}:${b.displayHeight|0}`;
       if(b.__rrBodyStamp===stamp)return;
       b.__rrBodyStamp=stamp;
-      // Rebuild the static body from the actual scaled sprite, then align it again.
-      b.body.setSize(b.width*.82,b.height*.88,false);
-      b.body.setOffset(b.width*.09,b.height*.12);
+      // Trim the collision footprint so the player reaches the visible facade.
+      // Keep most of the vertical body so roof collisions still line up.
+      b.body.setSize(b.width*.66,b.height*.88,false);
+      b.body.setOffset(b.width*.17,b.height*.12);
       if(b.body.updateFromGameObject)b.body.updateFromGameObject();
     });
   }
