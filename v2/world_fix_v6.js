@@ -20,13 +20,13 @@
     if(!scene.buildings)return;
     scene.buildings.getChildren().forEach(b=>{
       if(!b.active||!b.body)return;
-      const stamp=`tight:${b.displayWidth|0}:${b.displayHeight|0}`;
+      const stamp=`facade:${b.displayWidth|0}:${b.displayHeight|0}`;
       if(b.__rrBodyStamp===stamp)return;
       b.__rrBodyStamp=stamp;
-      // The PNG contains substantial transparent side padding. Use only the visible tower core.
-      // 42% width leaves the collision edge close to the rendered facade instead of the canvas edge.
-      b.body.setSize(b.width*.42,b.height*.86,false);
-      b.body.setOffset(b.width*.29,b.height*.14);
+      // Keep the collision wall inside the visible facade. The source PNG has a very wide
+      // transparent canvas, so the useful body is deliberately narrow and centred.
+      b.body.setSize(b.width*.20,b.height*.84,false);
+      b.body.setOffset(b.width*.40,b.height*.16);
       if(b.body.updateFromGameObject)b.body.updateFromGameObject();
     });
   }
