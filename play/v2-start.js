@@ -42,22 +42,15 @@
       }
     };
 
-    // Selection must fire exactly once. Previously every overlapping child was interactive,
-    // so one tap could dispatch several pointerdown handlers while the panel was destroying.
     let choosing = false;
     const chooseCharacter = (key, cardBg, portrait) => {
       if (choosing || isStarted) return;
       choosing = true;
-
-      // Stop the start screen receiving any further pointer events immediately.
       startPanel.list.forEach(obj => {
         if (obj && obj.input && obj.disableInteractive) obj.disableInteractive();
       });
-
-      // Tiny confirmation punch, then enter the real game on the next tick. This keeps
-      // Phaser's input dispatch separate from destruction of the container that was tapped.
       if (cardBg) cardBg.setFillStyle(0xffffff, 0.18);
-      if (portrait) portrait.setScale(0.60);
+      if (portrait) portrait.setScale(key === 'gorilla' ? 0.31 : 0.60);
       scene.time.delayedCall(1, () => startGame(key));
     };
 
@@ -70,7 +63,13 @@
 
       const portraitBack = scene.add.rectangle(x, -18, 156, 118, ch.color, 0.12);
       portraitBack.setStrokeStyle(2, ch.color, 0.55);
-      const portrait = scene.add.image(x, -22, `${ch.key}_portrait`).setScale(0.54);
+
+      // IMPORTANT: Gorilla now uses the actual new HD idle game texture here,
+      // not the old separate portrait asset. This makes the replacement obvious
+      // and guarantees the same texture seen on the card is the one used in-game.
+      const portraitKey = ch.key === 'gorilla' ? 'gorilla_idle' : `${ch.key}_portrait`;
+      const portraitScale = ch.key === 'gorilla' ? 0.28 : 0.54;
+      const portrait = scene.add.image(x, -22, portraitKey).setScale(portraitScale);
 
       const namePlate = scene.add.rectangle(x, 52, 150, 33, ch.color, 0.96).setAngle(-1.5);
       const name = scene.add.text(x, 51, ch.name, {
@@ -91,19 +90,18 @@
       }).setOrigin(0.5);
       startPanel.add(tap);
 
-      // One hit target per card; visual children deliberately stay non-interactive.
       cardBg.setInteractive({ useHandCursor:true });
       cardBg.on('pointerdown', () => chooseCharacter(ch.key, cardBg, portrait));
       cardBg.on('pointerover', () => {
         if (choosing) return;
         cardBg.setScale(1.045);
-        portrait.setScale(0.57);
+        portrait.setScale(ch.key === 'gorilla' ? 0.30 : 0.57);
         cardBg.setFillStyle(ch.color, 0.15);
       });
       cardBg.on('pointerout', () => {
         if (choosing) return;
         cardBg.setScale(1);
-        portrait.setScale(0.54);
+        portrait.setScale(portraitScale);
         cardBg.setFillStyle(0x07070a, 0.98);
       });
 
