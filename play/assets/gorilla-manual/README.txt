@@ -1,0 +1,1 @@
+User-normalized Gorilla preview assets. 500x500 source canvases; runtime preview uses common scale/anchor.
