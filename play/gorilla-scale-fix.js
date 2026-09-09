@@ -1,7 +1,7 @@
 // Scale fix for the new 500x500 gorilla sprite set.
 // Keep the source PNGs untouched and reduce only the in-game render size.
 (function () {
-  const GORILLA_SCALE = 0.31;
+  const GORILLA_SCALE = 0.26;
   let attempts = 0;
   const timer = setInterval(() => {
     attempts += 1;
