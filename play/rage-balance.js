@@ -4,7 +4,8 @@
   const originalAddRage = window.addRage;
   if (typeof originalAddRage !== "function") return;
 
-  const RAGE_GAIN_MULTIPLIER = 0.5;
+  // 25% of the previous 50% balance pass = 12.5% of the original rage gain.
+  const RAGE_GAIN_MULTIPLIER = 0.125;
 
   window.addRage = function (amount) {
     return originalAddRage(amount * RAGE_GAIN_MULTIPLIER);
