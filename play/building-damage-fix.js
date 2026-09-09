@@ -35,21 +35,16 @@
   function drawCrack(g, b, points, stage) {
     const lineW = Math.max(2, b.displayWidth * (0.007 + stage * 0.0015));
     const p0 = points[0];
-
-    // Violet edge makes the fracture readable over the dark neon facade.
     g.lineStyle(lineW + 2, 0xb778d1, 0.68);
     g.beginPath();
     g.moveTo(sx(b,p0[0]), sy(b,p0[1]));
     for (let i=1;i<points.length;i++) g.lineTo(sx(b,points[i][0]), sy(b,points[i][1]));
     g.strokePath();
-
     g.lineStyle(lineW, 0x050207, 0.98);
     g.beginPath();
     g.moveTo(sx(b,p0[0]), sy(b,p0[1]));
     for (let i=1;i<points.length;i++) g.lineTo(sx(b,points[i][0]), sy(b,points[i][1]));
     g.strokePath();
-
-    // Short branches off the main fracture.
     for (let i=1;i<points.length-1;i+=2) {
       const p = points[i];
       const dir = ((i + stage) % 2) ? 1 : -1;
@@ -70,7 +65,6 @@
     g.fillEllipse(sx(b,x), sy(b,y), rx*2.2, ry*2.2);
     g.lineStyle(Math.max(2,b.displayWidth*0.006), 0xa269b8, 0.72);
     g.strokeEllipse(sx(b,x), sy(b,y), rx*2.35, ry*2.35);
-
     for (let n=0;n<4;n++) {
       const a = (n * 1.47) + stage * 0.31;
       const dx = Math.cos(a) * r * 2.0;
@@ -86,38 +80,42 @@
   function renderDamage(b, stage) {
     destroyOverlay(b);
     if (!stage || !b.scene || !b.active) return;
-
     const g = b.scene.add.graphics();
     g.setPosition(b.x, b.y);
     g.setDepth(4.25);
-
     const crackCount = stage === 1 ? 3 : stage === 2 ? 6 : 10;
     for (let i=0;i<crackCount;i++) drawCrack(g,b,cracks[i],stage);
-
     if (stage >= 2) {
       const holeCount = stage === 2 ? 2 : 5;
       for (let i=0;i<holeCount;i++) drawHole(g,b,holes[i],stage);
     }
-
     b.rrDamageOverlay = g;
+
+    // Buildings are removed with disableBody(true, true), not destroy().
+    // Wrap that call once so the separate crack graphics disappear at the same time.
+    if (!b.rrDamageDisableWrapped && typeof b.disableBody === "function") {
+      const originalDisableBody = b.disableBody;
+      b.disableBody = function () {
+        destroyOverlay(b);
+        return originalDisableBody.apply(this, arguments);
+      };
+      b.rrDamageDisableWrapped = true;
+    }
+
     b.once(Phaser.GameObjects.Events.DESTROY, function () { destroyOverlay(b); });
   }
 
-  // Replace the old alpha-only damage feedback with visible progressive cracks.
   window.updateBuildingDamageVisual = function (b) {
     if (!b || !b.active || !b.maxHp) {
       destroyOverlay(b);
       return;
     }
-
     const ratio = Phaser.Math.Clamp(b.hp / b.maxHp, 0, 1);
     const stage = ratio <= 0.25 ? 3 : ratio <= 0.5 ? 2 : ratio <= 0.75 ? 1 : 0;
     if (stage === b.damageStage) return;
-
     b.damageStage = stage;
-    b.setAlpha(1); // damage is now artwork, not transparency
+    b.setAlpha(1);
     renderDamage(b, stage);
-
     if (stage === 1) {
       smokePuff(b.scene, b.x, b.y - b.displayHeight * 0.35, 0.45);
     } else if (stage === 2) {
